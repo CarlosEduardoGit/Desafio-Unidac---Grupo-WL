@@ -1,0 +1,40 @@
+package com.app.breakfast.services;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.app.breakfast.models.CheckListModel;
+
+public interface CheckListService {
+	
+	//void insercao(CheckListModel checkListModel);
+	
+	void save(CheckListModel checkListModel);
+	
+	List<CheckListModel> consulta();
+	
+	//Page<CheckListModel> findAll(Pageable pageable);
+	
+	Optional<CheckListModel> consultaPorId(UUID checkListId);
+
+	//Optional<CheckListModel> findById(UUID checkListId);
+	
+	//void atualizacao(CheckListModel checkListModel);
+
+	//void exclusao(CheckListModel checkListModel);
+
+	void delete(CheckListModel checkListModel);
+
+	
+
+	boolean existsByCollaboratorName(String collaboratorName);
+
+	boolean existsByCpf(String cpf);
+
+	boolean existsByContribution(String contribution);
+		
+}

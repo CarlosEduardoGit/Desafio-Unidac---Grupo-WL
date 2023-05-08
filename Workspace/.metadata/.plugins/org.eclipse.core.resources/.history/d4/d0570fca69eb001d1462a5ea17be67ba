@@ -1,0 +1,23 @@
+package com.app.breakfast.dtos;
+
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Data;
+
+
+
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CheckListDto {
+	
+	private String collaboratorName;
+	
+	private String cpf;
+	
+	private String contribution;
+
+	private String dateOfRealization;
+
+}

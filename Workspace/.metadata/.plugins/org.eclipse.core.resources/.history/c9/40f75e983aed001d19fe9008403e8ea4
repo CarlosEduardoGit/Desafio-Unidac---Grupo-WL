@@ -1,0 +1,204 @@
+package com.app.breakfast.controllers;
+
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.app.breakfast.dtos.CheckListDto;
+import com.app.breakfast.dtos.CheckListDto.CheckListView;
+
+import com.app.breakfast.models.CheckListModel;
+import com.app.breakfast.services.CheckListService;
+import com.fasterxml.jackson.annotation.JsonView;
+
+@RestController
+@CrossOrigin(origins = "*",maxAge = 3600)
+@RequestMapping("/checklist")
+public class CheckListController {
+
+	@Autowired
+	CheckListService checkListService;
+	
+	
+	@PostMapping("/register")
+    public ResponseEntity<Object> registerCheckList(@RequestBody @Validated(CheckListDto.CheckListView.RegistrationPost.class)
+    												@JsonView(CheckListDto.CheckListView.RegistrationPost.class)CheckListDto checkListDto){
+        
+	   if(checkListService.existsByCollaboratorName(checkListDto.getCollaboratorName())){
+	       return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Collaborator Name is already exists!");
+	   }
+	   
+	   if(checkListService.existsByCpf(checkListDto.getCpf())){
+	       return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: CPF is already exists!");
+	   }
+	   
+	   if(checkListService.existsByContribution(checkListDto.getContribution())){
+	       return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Contribution is already exists!");
+	   }
+		
+	   var checkListModel = new CheckListModel();
+       BeanUtils.copyProperties(checkListDto, checkListModel);
+       checkListService.save(checkListModel);
+       return ResponseEntity.status(HttpStatus.CREATED).body(checkListModel);
+
+    }
+    
+	@GetMapping
+    public List<CheckListModel> getAllCheckLists(){
+        
+        return checkListService.consulta();
+    }
+	
+	@GetMapping("/{checkListId}")
+    public ResponseEntity<Object> getOneCheckList(@PathVariable(value = "checkListId") UUID checkListId){
+		
+		Optional<CheckListModel> checkListModelOptional = checkListService.consultaPorId(checkListId);
+		
+		if(!checkListModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This record does not exist in the list.");
+        } else{
+            return ResponseEntity.status(HttpStatus.OK).body(checkListModelOptional.get());
+        }
+        
+    }
+	
+		
+	/*
+	@GetMapping
+	public Page<CheckListModel> getAllCheckLists(@PageableDefault(page = 0, size = 10, sort = "checkListId", direction = Sort.Direction.DESC) Pageable pageable){
+		Page<CheckListModel> checkListModelPage = checkListService.findAll(pageable);
+		return checkListModelPage;
+	}
+	*/
+	
+	
+	
+	
+	/*@GetMapping
+    public List<CheckListModel> getAllCheckLists(){
+        
+        return checkListService.findAll();
+    }
+	*/
+	
+	
+	
+	/*@GetMapping("/{checkListId}")
+    public ResponseEntity<Object> getOneCheckList(@PathVariable(value = "checkListId") UUID checkListId){
+		
+		Optional<CheckListModel> checkListModelOptional = checkListService.findById(checkListId);
+		
+		if(!checkListModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This record does not exist in the list.");
+        } else{
+            return ResponseEntity.status(HttpStatus.OK).body(checkListModelOptional.get());
+        }
+        
+    }*/
+	
+	@PutMapping("/{checkListId}")
+    public ResponseEntity<Object> updateCheckList(@PathVariable(value = "checkListId") UUID checkListId, 
+    											  @RequestBody @Validated(CheckListDto.CheckListView.CheckListPut.class) 
+    											  @JsonView(CheckListDto.CheckListView.CheckListPut.class) CheckListDto checkListDto){
+		
+		Optional<CheckListModel> checkListModelOptional = checkListService.consultaPorId(checkListId);
+        
+        if(!checkListModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This record does not exist in the list.");
+        } else{
+        	var checkListModel = checkListModelOptional.get();
+        	checkListModel.setCollaboratorName(checkListDto.getCollaboratorName());
+        	checkListModel.setCollaboratorContributed(checkListDto.isCollaboratorcontributed());
+        	checkListModel.setCpf(checkListDto.getCpf());
+        	checkListModel.setContribution(checkListDto.getContribution());
+        	checkListModel.setDataBreakfast(checkListDto.getDataBreakfast());
+        	checkListService.save(checkListModel);
+        	
+        	return ResponseEntity.status(HttpStatus.OK).body(checkListModel);
+        }
+	}
+	
+	/*
+	@DeleteMapping("/{checkListId}")
+    public ResponseEntity<Object> deleteCheckList(@PathVariable(value = "checkListId") UUID checkListId){
+        
+        Optional<CheckListModel> checkListModelOptional = checkListService.findById(checkListId);
+        
+        if(!checkListModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This record does not exist in the list.");
+        } else{
+        	checkListService.delete(checkListModelOptional.get());
+            return ResponseEntity.status(HttpStatus.OK).body("Record deleted successfully");
+        }
+    }
+    
+   */
+	
+	@DeleteMapping("/{checkListId}")
+    public ResponseEntity<Object> deleteCheckList(@PathVariable(value = "checkListId") UUID checkListId){
+        
+        Optional<CheckListModel> checkListModelOptional = checkListService.consultaPorId(checkListId);
+        
+        if(!checkListModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This record does not exist in the list.");
+        } else{
+        	checkListService.exclusao(checkListModelOptional.get());
+            return ResponseEntity.status(HttpStatus.OK).body("Record deleted successfully");
+        }
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

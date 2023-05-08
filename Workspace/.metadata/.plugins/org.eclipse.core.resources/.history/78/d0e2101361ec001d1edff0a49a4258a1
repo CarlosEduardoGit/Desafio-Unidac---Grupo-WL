@@ -1,0 +1,17 @@
+package com.app.breakfast.configs;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+@Configuration
+public class ResolverConfig extends WebMvcConfigurationSupport{
+
+	 @Override
+	    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+	        argumentResolvers.add(new SpecificationArgumentResolver());
+
+	        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
+	        argumentResolvers.add(resolver);
+	        super.addArgumentResolvers(argumentResolvers);
+	    }
+}

@@ -1,0 +1,6 @@
+package com.app.breakfast.enums;
+
+public enum CollaboratorStatus {
+	ACTIVE, 
+	BLOCKED;
+}

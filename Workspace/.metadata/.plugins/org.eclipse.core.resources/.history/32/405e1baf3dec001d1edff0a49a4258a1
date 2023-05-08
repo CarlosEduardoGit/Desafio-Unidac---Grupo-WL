@@ -1,0 +1,5 @@
+package com.app.breakfast.validation;
+
+public class CollaboratorNameConstraintImpl implements ConstraintValidator<CollaboratorNameConstraint>{
+
+}

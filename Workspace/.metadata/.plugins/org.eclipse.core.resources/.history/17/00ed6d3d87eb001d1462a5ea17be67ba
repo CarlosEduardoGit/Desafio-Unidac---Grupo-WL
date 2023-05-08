@@ -1,0 +1,56 @@
+package com.app.breakfast.serviceImpl;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.app.breakfast.models.CheckListModel;
+import com.app.breakfast.repositories.CheckListRepository;
+import com.app.breakfast.services.CheckListService;
+
+@Service
+public class CheckListServiceImpl implements CheckListService{
+
+	@Autowired
+	CheckListRepository checkListRepository;
+
+	@Override
+	public List<CheckListModel> findAll() {
+		return checkListRepository.findAll();
+	}
+
+	@Override
+	public Optional<CheckListModel> findById(UUID checkListId) {
+		return checkListRepository.findById(checkListId);
+	}
+
+	@Override
+	public void delete(CheckListModel checkListModel) {
+		checkListRepository.delete(checkListModel);
+		
+	}
+
+	@Override
+	public void save(CheckListModel checkListModel) {
+		checkListRepository.save(checkListModel);
+		
+	}
+/*
+	@Override
+	public boolean existsByCollaboratorName(String collaboratorName) {
+		return checkListRepository.collaboratorName(collaboratorName);
+	}
+
+	@Override
+	public boolean existsByCpf(String cpf) {
+		return checkListRepository.cpf(cpf);
+	}
+
+	@Override
+	public boolean existsByContribuicao(String contribution) {
+		return checkListRepository.contribution(contribution);
+	} */
+}

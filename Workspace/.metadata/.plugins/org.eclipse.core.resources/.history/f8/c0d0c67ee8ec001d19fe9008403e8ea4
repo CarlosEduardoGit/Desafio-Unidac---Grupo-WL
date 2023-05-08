@@ -1,0 +1,26 @@
+package com.app.breakfast.repositories;
+
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.app.breakfast.models.CheckListModel;
+
+
+
+public interface CheckListRepository extends JpaRepository<CheckListModel, UUID> {
+
+	
+	@Query(value="select * from tb_modules where course_course_id = :courseId", nativeQuery = true)
+	List<ModuleModel> consulta(@Param("courseId") UUID courseId);
+	
+	
+	
+	boolean existsByCollaboratorName(String collaboratorName);
+	
+	boolean existsByCpf(String cpf);
+	
+	boolean existsByContribution(String contribution);
+	
+	
+}

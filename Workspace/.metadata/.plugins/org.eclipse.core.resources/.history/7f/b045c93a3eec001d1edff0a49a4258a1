@@ -1,0 +1,16 @@
+package com.app.breakfast.validation;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+public class CollaboratorNameConstraintImpl implements ConstraintValidator<CollaboratorNameConstraint, String>{
+
+	@Override
+	public boolean isValid(String collaboratorName, ConstraintValidatorContext context) {
+		if(collaboratorName == null || collaboratorName.isEmpty()) {
+			return false;
+		}
+		return false;
+	}
+
+}

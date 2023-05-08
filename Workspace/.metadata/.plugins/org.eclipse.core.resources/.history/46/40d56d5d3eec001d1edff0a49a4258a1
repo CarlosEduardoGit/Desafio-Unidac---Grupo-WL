@@ -1,0 +1,17 @@
+package com.app.breakfast.validation;
+
+import java.lang.annotation.Documented;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+@Documented
+@Constraint(validatedBy = CollaboratorNameConstraintImpl.class)
+@Target({ElementType.METHOD, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CollaboratorNameConstraint {
+	
+	String message() default "Invalid collaboratorname";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+}

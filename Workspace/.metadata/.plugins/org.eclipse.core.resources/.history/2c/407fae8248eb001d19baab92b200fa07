@@ -1,0 +1,22 @@
+package com.app.breakfast.repositories;
+
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import com.app.breakfast.models.CheckListModel;
+
+
+
+public interface CheckListRepository extends JpaRepository<CheckListModel, UUID>/*, JpaSpecificationExecutor<CheckListModel>*/ {
+
+	
+	boolean collaboratorName(String collaboratorName);
+	
+	boolean cpf(String cpf);
+	
+	boolean contribution(String contribution);
+	
+	
+}

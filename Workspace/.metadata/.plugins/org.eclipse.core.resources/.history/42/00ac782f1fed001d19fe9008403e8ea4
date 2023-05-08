@@ -1,0 +1,5 @@
+package com.app.breakfast.enums;
+
+public enum CollaboratorContributed {
+
+}
